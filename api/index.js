@@ -16,9 +16,8 @@ app.use(
     "Access-Control-Allow-Origin": "http://127.0.0.1:5173/",
   })
 );
-// console.log(process.env.MONGO_URL);
-mongoose.connect("process.env.MONGO_URL");
-console.log("MongoDB Connected");
+console.log(process.env.MONGO_URL);
+mongoose.connect(process.env.MONGO_URL);
 
 app.get("/test", (req, res) => {
   res.json("test ok");
@@ -26,12 +25,16 @@ app.get("/test", (req, res) => {
 
 app.post("/register1", async (req, res) => {
   const { name, email, password } = req.body;
-  User.create({
-    name,
-    email,
-    password: bcrypt.hashSync(password, bcryptSalt),
-  });
-  res.json({ name, email, password });
+  try {
+    const userDoc = await User.create({
+      name,
+      email,
+      password: bcrypt.hashSync(password, bcryptSalt),
+    });
+    res.json(userDoc);
+  } catch (e) {
+    res.status(422).json(0);
+  }
 });
 
 app.listen(4000);
