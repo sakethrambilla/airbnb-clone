@@ -20,6 +20,7 @@ function App() {
           <Route path="/login" element={<Loginpage />} />
           <Route path="/register" element={<Registerpage />} />
           <Route path="/account/:subpage?" element={<AccountPage />} />
+          <Route path="/account/:subpage/:action" element={<AccountPage />} />
         </Route>
       </Routes>
     </UserContextProvider>
