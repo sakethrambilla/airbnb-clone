@@ -5,6 +5,7 @@ const { default: mongoose } = require("mongoose");
 const bcrypt = require("bcryptjs");
 const User = require("./models/User.js");
 const jwt = require("jsonwebtoken");
+const imageDownloader = require("image-downloader");
 require("dotenv").config();
 const app = express();
 
@@ -83,6 +84,17 @@ app.get("/profile", (req, res) => {
 
 app.post("/logout", (req, res) => {
   res.cookie("token", "").json(true);
+});
+
+console.log({ __dirname });
+app.post("/upload-by-link", async (req, res) => {
+  const { Link } = req.body;
+  const newName = Date.now() + ".jpg";
+  await imageDownloader.image({
+    url: Link,
+    dest: __dirname + "/uploads/" + newName,
+  });
+  res.json(newName);
 });
 
 app.listen(4000);
