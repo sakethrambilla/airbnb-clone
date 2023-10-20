@@ -14,6 +14,8 @@ const jwtSecret = "fasefraw4r5r3wq45wdfgw34twdfg";
 
 app.use(express.json());
 app.use(cookieParser());
+app.use("/uploads", express.static(__dirname + "/uploads"));
+
 app.use(
   cors({
     credentials: true,
@@ -21,12 +23,15 @@ app.use(
   }),
 );
 // console.log(process.env.MONGO_URL);
+// Connect to Database
 mongoose.connect(process.env.MONGO_URL);
 
+// server testing
 app.get("/test", (req, res) => {
   res.json("test ok");
 });
 
+// register user
 app.post("/register1", async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const { name, email, password } = req.body;
@@ -43,6 +48,7 @@ app.post("/register1", async (req, res) => {
   }
 });
 
+// login user
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const userDoc = await User.findOne({ email });
@@ -69,6 +75,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
+// get profile details
 app.get("/profile", (req, res) => {
   const { token } = req.cookies;
   if (token) {
@@ -82,16 +89,19 @@ app.get("/profile", (req, res) => {
   }
 });
 
+// logout loggined user
 app.post("/logout", (req, res) => {
   res.cookie("token", "").json(true);
 });
 
-console.log({ __dirname });
+// console.log({ __dirname });
+
+// upload images by link
 app.post("/upload-by-link", async (req, res) => {
-  const { Link } = req.body;
-  const newName = Date.now() + ".jpg";
+  const { link } = req.body;
+  const newName = "photo" + Date.now() + ".jpg";
   await imageDownloader.image({
-    url: Link,
+    url: link,
     dest: __dirname + "/uploads/" + newName,
   });
   res.json(newName);
