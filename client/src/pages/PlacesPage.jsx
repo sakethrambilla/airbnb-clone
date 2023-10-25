@@ -53,6 +53,24 @@ export default function PlacesPage() {
       console.log(err.toJSON());
     }
   }
+  //upload photo function
+  function uploadPhoto(ev) {
+    const files = ev.target.files;
+    const data = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      data.append("photos", files[i]);
+    }
+    axios
+      .post("/upload", data, {
+        headers: { "Content-type": "multipart/form-data" },
+      })
+      .then((response) => {
+        const { data: filenames } = response;
+        setAddedPhotos((prev) => {
+          return [...prev, ...filenames];
+        });
+      });
+  }
 
   return (
     <div className="m-4">
@@ -129,17 +147,23 @@ export default function PlacesPage() {
               {addedPhotos.length > 0 &&
                 addedPhotos.map((link) => (
                   // eslint-disable-next-line react/jsx-key
-                  <div>
+                  <div className="flex h-32">
                     <img
-                      className="h-full rounded-2xl"
-                      src={"http://localhost:4000/uploads/" + link}
+                      className="w-full rounded-2xl object-cover "
+                      src={"http://localhost:4000/" + link}
                       alt=""
                     />
                   </div>
                 ))}
 
               {/* Upload image from local machine */}
-              <button className=" flex items-center justify-center gap-1 rounded-2xl border bg-transparent p-2 text-2xl text-gray-500">
+              <label className=" flex h-32 cursor-pointer items-center justify-center gap-1 rounded-2xl border bg-transparent p-2 text-2xl text-gray-500">
+                <input
+                  type="file"
+                  multiple
+                  className="hidden"
+                  onChange={uploadPhoto}
+                />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -155,7 +179,7 @@ export default function PlacesPage() {
                   />
                 </svg>
                 Upload
-              </button>
+              </label>
             </div>
 
             {/* Description */}
