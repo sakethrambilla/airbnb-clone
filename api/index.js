@@ -55,6 +55,7 @@ app.post("/register1", async (req, res) => {
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const userDoc = await User.findOne({ email });
+  console.log(userDoc);
   if (userDoc) {
     const passOk = bcrypt.compareSync(password, userDoc.password);
     if (passOk) {
@@ -74,7 +75,7 @@ app.post("/login", async (req, res) => {
       res.status(422).json("pass not ok");
     }
   } else {
-    res.json("not found");
+    res.status(404).json("not found");
   }
 });
 
@@ -115,13 +116,15 @@ const photosMiddleware = multer({ dest: "uploads/" });
 app.post("/upload", photosMiddleware.array("photos", 100), (req, res) => {
   const uploadedFiles = [];
   for (let i = 0; i < req.files.length; i++) {
+    // console.log(req.files[i]);
     const { path, originalname } = req.files[i];
     const parts = originalname.split(".");
     const ext = parts[parts.length - 1];
     const newPath = path + "." + ext;
     fs.renameSync(path, newPath);
-    uploadedFiles.push(newPath.replace("uploads/", ""));
+    uploadedFiles.push(newPath.replace("uploads", ""));
   }
+  console.log(uploadedFiles);
   res.json(uploadedFiles);
 });
 

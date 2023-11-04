@@ -27,10 +27,10 @@ export default function Loginpage() {
   }
 
   return (
-    <div className="mt-4 grow flex items-center justify-around">
+    <div className="mt-4 flex grow items-center justify-around">
       <div className="mb-64">
-        <h1 className="text-4xl text-center mb-4">Login</h1>
-        <form className="max-w-md mx-auto" onSubmit={handleLoginSubmit}>
+        <h1 className="mb-4 text-center text-4xl">Login</h1>
+        <form className="mx-auto max-w-md" onSubmit={handleLoginSubmit}>
           <input
             type="email"
             placeholder="your@email.com"
@@ -44,9 +44,9 @@ export default function Loginpage() {
             onChange={(ev) => setPassword(ev.target.value)}
           />
           <button className="primary">Login</button>
-          <div className="text-center py-2 text-gray-500">
-            Don't have an account yet?
-            <Link className="underline text-black" to={"/register"}>
+          <div className="py-2 text-center text-gray-500">
+            Dont have an account yet?
+            <Link className="text-black underline" to={"/register"}>
               {" "}
               <br />
               Register now
