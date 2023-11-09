@@ -6,7 +6,7 @@ export default function PlacesPage() {
   return (
     <div className="m-4">
       <AccountNav />
-      List of All Places Batman
+      List of All Places
       <div className="text-center">
         <Link
           className="bg-primary inline-flex gap-1 rounded-full px-6 py-2 text-white"
