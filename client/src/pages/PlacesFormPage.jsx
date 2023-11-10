@@ -1,10 +1,13 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Perks from "../Perks";
 import PhotosUploader from "../PhotosUploader";
 import AccountNav from "../AccountNav";
+import { Navigate, useParams } from "react-router-dom";
 
 const PlacesFormPage = () => {
+  const { id } = useParams();
+  console.log({ id });
   const [addedPhotos, setAddedPhotos] = useState([]);
   const [title, setTitle] = useState("");
   const [address, setAddress] = useState("");
@@ -14,6 +17,24 @@ const PlacesFormPage = () => {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [maxGuests, setMaxGuests] = useState(1);
+  const [redirect, setRedirect] = useState(false);
+  useEffect(() => {
+    if (!id) {
+      return;
+    }
+    axios.get("/places/" + id).then((response) => {
+      const { data } = response;
+      setTitle(data.title);
+      setAddress(data.address);
+      setAddedPhotos(data.photos);
+      setDescription(data.description);
+      setPerks(data.perks);
+      setExtraInfo(data.extraInfo);
+      setCheckIn(data.checkIn);
+      setCheckOut(data.checkOut);
+      setMaxGuests(data.maxGuests);
+    });
+  }, [id]);
 
   // functions
   function inputHeader(text) {
@@ -33,7 +54,7 @@ const PlacesFormPage = () => {
     );
   }
 
-  async function addNewPlace(ev) {
+  async function savePlace(ev) {
     ev.preventDefault();
     const placeData = {
       title,
@@ -46,13 +67,29 @@ const PlacesFormPage = () => {
       checkOut,
       maxGuests,
     };
-    await axios.post("/places", placeData);
+
+    if (id) {
+      //updating existing place
+      await axios.put("/places", {
+        id,
+        ...placeData,
+      });
+      setRedirect(true);
+    } else {
+      //creating New Place
+      await axios.post("/places", placeData);
+      setRedirect(true);
+    }
+  }
+
+  if (redirect) {
+    return <Navigate to={"/account/places"} />;
   }
 
   return (
     <div>
       <AccountNav />
-      <form onSubmit={addNewPlace} className="m-2">
+      <form onSubmit={savePlace} className="m-2">
         {/*  */}
         {/* Title */}
         {preInput("Title", "Title for your place. Should be short and catchy")}

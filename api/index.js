@@ -56,7 +56,6 @@ app.post("/register1", async (req, res) => {
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const userDoc = await User.findOne({ email });
-  console.log(userDoc);
   if (userDoc) {
     const passOk = bcrypt.compareSync(password, userDoc.password);
     if (passOk) {
@@ -152,7 +151,7 @@ app.post("/places", (req, res) => {
       owner: userData.id,
       title,
       address,
-      addedPhotos,
+      photos: addedPhotos,
       description,
       perks,
       extraInfo,
@@ -160,8 +159,67 @@ app.post("/places", (req, res) => {
       checkOut,
       maxGuests,
     });
+    res.json(placeDoc);
   });
-  res.json(placeDoc);
+});
+
+// @desc Get all places
+// route GET /places
+// @access Public
+app.get("/places", (req, res) => {
+  const { token } = req.cookies;
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) throw err;
+    const { id } = userData;
+    res.json(await Place.find({ owner: id }));
+  });
+});
+
+// @desc Get place details  by id
+// route GET /places/:id
+// @access Public
+app.get("/places/:id", async (req, res) => {
+  const { id } = req.params;
+  res.json(await Place.findById(id));
+});
+
+// @desc Updating place by id
+// route PUT /places
+// @access Public
+app.put("/places", async (req, res) => {
+  const { token } = req.cookies;
+
+  const {
+    id,
+    title,
+    address,
+    addedPhotos,
+    description,
+    perks,
+    extraInfo,
+    checkIn,
+    checkOut,
+    maxGuests,
+  } = req.body;
+
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    const placeDoc = await Place.findById(id);
+    if (userData.id === placeDoc.owner.toString()) {
+      placeDoc.set({
+        title,
+        address,
+        photos: addedPhotos,
+        description,
+        perks,
+        extraInfo,
+        checkIn,
+        checkOut,
+        maxGuests,
+      });
+      placeDoc.save();
+      res.json("ok");
+    }
+  });
 });
 
 app.listen(4000);

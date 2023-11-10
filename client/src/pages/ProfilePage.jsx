@@ -29,7 +29,7 @@ export default function ProfilePage() {
   }
 
   if (redirect) {
-    // return <Navigate to{redirect}/>
+    return <Navigate to={redirect} />;
   }
 
   return (
