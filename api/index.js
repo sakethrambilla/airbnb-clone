@@ -4,6 +4,7 @@ const cookieParser = require("cookie-parser");
 const { default: mongoose } = require("mongoose");
 const bcrypt = require("bcryptjs");
 const User = require("./models/User.js");
+const Place = require("./models/Place.js");
 const jwt = require("jsonwebtoken");
 const imageDownloader = require("image-downloader");
 const multer = require("multer");
@@ -74,7 +75,7 @@ app.post("/login", async (req, res) => {
       res.status(422).json("pass not ok");
     }
   } else {
-    res.json("not found");
+    res.status(404).json("not found");
   }
 });
 
@@ -115,14 +116,110 @@ const photosMiddleware = multer({ dest: "uploads/" });
 app.post("/upload", photosMiddleware.array("photos", 100), (req, res) => {
   const uploadedFiles = [];
   for (let i = 0; i < req.files.length; i++) {
+    // console.log(req.files[i]);
     const { path, originalname } = req.files[i];
     const parts = originalname.split(".");
     const ext = parts[parts.length - 1];
     const newPath = path + "." + ext;
     fs.renameSync(path, newPath);
-    uploadedFiles.push(newPath.replace("uploads/", ""));
+    uploadedFiles.push(newPath.replace("uploads", ""));
   }
+  console.log(uploadedFiles);
   res.json(uploadedFiles);
+});
+
+// @desc Create a new place
+// route POST /places/new
+// @access Public
+app.post("/places", (req, res) => {
+  const { token } = req.cookies;
+  const {
+    title,
+    address,
+    addedPhotos,
+    description,
+    perks,
+    extraInfo,
+    checkIn,
+    checkOut,
+    maxGuests,
+  } = req.body;
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) throw err;
+
+    const placeDoc = await Place.create({
+      owner: userData.id,
+      title,
+      address,
+      photos: addedPhotos,
+      description,
+      perks,
+      extraInfo,
+      checkIn,
+      checkOut,
+      maxGuests,
+    });
+    res.json(placeDoc);
+  });
+});
+
+// @desc Get all places
+// route GET /places
+// @access Public
+app.get("/places", (req, res) => {
+  const { token } = req.cookies;
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) throw err;
+    const { id } = userData;
+    res.json(await Place.find({ owner: id }));
+  });
+});
+
+// @desc Get place details  by id
+// route GET /places/:id
+// @access Public
+app.get("/places/:id", async (req, res) => {
+  const { id } = req.params;
+  res.json(await Place.findById(id));
+});
+
+// @desc Updating place by id
+// route PUT /places
+// @access Public
+app.put("/places", async (req, res) => {
+  const { token } = req.cookies;
+
+  const {
+    id,
+    title,
+    address,
+    addedPhotos,
+    description,
+    perks,
+    extraInfo,
+    checkIn,
+    checkOut,
+    maxGuests,
+  } = req.body;
+
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    const placeDoc = await Place.findById(id);
+    if (userData.id === placeDoc.owner.toString()) {
+      placeDoc.set({
+        title,
+        address,
+        photos: addedPhotos,
+        description,
+        perks,
+        extraInfo,
+        checkIn,
+        checkOut,
+        maxGuests,
+      });
+      placeDoc.save();
+      res.json("ok");
+    }
+  });
 });
 
 app.listen(4000);
