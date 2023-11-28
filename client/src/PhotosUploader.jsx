@@ -42,7 +42,7 @@ const PhotosUploader = ({ addedPhotos, onChange }) => {
         });
       });
   }
-
+  //remove photo function
   function removePhoto(ev, filename) {
     ev.preventDefault();
     onChange([...addedPhotos.filter((photo) => photo !== filename)]);
