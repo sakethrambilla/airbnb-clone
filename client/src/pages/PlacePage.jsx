@@ -9,7 +9,7 @@ export default function PlacePage() {
     if (!id) {
       return;
     }
-    axios.get("/places/${id}").then((response) => {
+    axios.get(`/places/${id}`).then((response) => {
       setPlace(response.data);
     });
   }, [id]);
@@ -18,8 +18,12 @@ export default function PlacePage() {
 
   return (
     <div className="-mx-8 mt-4 bg-gray-100 px-8 py-8">
-      <h1 classNmae="text-2xl">{place.title}</h1>
-      <a target="_blank" href={"https://maps.google.com/?q=" + place.address}>
+      <h1 className="text-2xl">{place.title}</h1>
+      <a
+        target="_blank"
+        rel="noreferrer"
+        href={"https://maps.google.com/?q=" + place.address}
+      >
         {place.address}
       </a>
     </div>
