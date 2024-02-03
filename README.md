@@ -1,7 +1,4 @@
 
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)  ![Static Badge](https://img.shields.io/badge/contribuors-2-blue)
-
-
 # AirBnB Clone
 
 Airbnb clone project, offering a user-friendly platform for property rentals with robust features such as property listing, booking.
@@ -12,10 +9,11 @@ Airbnb clone project, offering a user-friendly platform for property rentals wit
 
 ## Features
 
-- Light/dark mode toggle
-- Live previews
-- Fullscreen mode
-- Cross platform
+- Login / Register Page
+- Creating / Updating Sccommodations
+- Booking Accommodation
+- Hotel Google Map Location
+
 
 
 ## Tech Stack
@@ -30,25 +28,40 @@ Airbnb clone project, offering a user-friendly platform for property rentals wit
 Clone the project
 
 ```bash
-  git clone https://link-to-project
+  git clone https://github.com/sakethrambilla/airbnb-clone.git
 ```
 
 Go to the project directory
 
 ```bash
-  cd my-project
+  cd airbnb-clone
 ```
 
-Install dependencies
+### Install dependencies
 
+1 Frontend
 ```bash
+  cd client
+  npm install
+```
+2 Backend
+```bash
+  cd api
   npm install
 ```
 
-Start the server
+3 Start the app
 
 ```bash
-  npm run start
+  cd client
+  npm run dev
+```
+
+4 Start the server
+
+```bash
+  cd api
+  nodemon index.js
 ```
 
 
@@ -56,15 +69,18 @@ Start the server
 
 To run this project, you will need to add the following environment variables to your .env file
 
-`API_KEY`
-
-`ANOTHER_API_KEY`
-
+`
+MONGO_URL =mongodb+srv://<username>:<password>@cluster0.rtssrsm.mongodb.net/?retryWrites=true&w=majority
+`
 
 ## Screenshots
 
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
-
+<img src='sampleImages/Img1.png' alt='home page' width=800/>
+<img src='sampleImages/Img2.png' alt='Login Page' width=800/>
+<img src='sampleImages/Img3.png' alt='Register page' width=800/>
+<img src='sampleImages/Img5.png' alt='Booking page' width=800/>
+<img src='sampleImages/Img4.png' alt='Booking page' width=800/>
+<img src='sampleImages/Img6.png' alt='My Accomadations page' width=800/>
 
 ## API Reference
 
@@ -92,17 +108,4 @@ To run this project, you will need to add the following environment variables to
 
 Takes two numbers and returns the sum.
 
-## Color Reference
-
-| Color             | Hex                                                                |
-| ----------------- | ------------------------------------------------------------------ |
-| Example Color | ![#0a192f](https://via.placeholder.com/10/0a192f?text=+) #0a192f |
-| Example Color | ![#f8f8f8](https://via.placeholder.com/10/f8f8f8?text=+) #f8f8f8 |
-| Example Color | ![#00b48a](https://via.placeholder.com/10/00b48a?text=+) #00b48a |
-| Example Color | ![#00d1a0](https://via.placeholder.com/10/00b48a?text=+) #00d1a0 |
-
-
-## Documentation
-
-[Documentation](https://linktodocumentation)
 
