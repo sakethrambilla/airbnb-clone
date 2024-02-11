@@ -82,30 +82,3 @@ MONGO_URL =mongodb+srv://<username>:<password>@cluster0.rtssrsm.mongodb.net/?ret
 <img src='sampleImages/Img4.png' alt='Booking page' width=800/>
 <img src='sampleImages/Img6.png' alt='My Accomadations page' width=800/>
 
-## API Reference
-
-#### Get all items
-
-```
-  GET /api/items
-```
-
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `api_key` | `string` | **Required**. Your API key |
-
-#### Get item
-
-```
-  GET /api/items/${id}
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**. Id of item to fetch |
-
-#### add(num1, num2)
-
-Takes two numbers and returns the sum.
-
-
